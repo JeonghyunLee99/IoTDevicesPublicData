@@ -1,0 +1,164 @@
+공공데이터 아두이노 하계특강(김창호 교수님)_2주차-1 강의 필기.txt
+
+2020. 7. 14.(화) 수업 - 2020. 7. 14.(화) 필기
+
+[수업 시작]
+
+@@@ 2-1주차 수업 시작
+
+[1] 디지털 출력
+
+ - 오늘의 키워드: 디지털
+
+ - 디지털 신호: 1와 0으로만 구성된 신호
+ - 1: 있다, 0: 없다
+ - 2진수를 사용할 수 있음 => 10진수 또한 사용 가능 => 숫자를 사용하니 논리 게이트 && 또한 사용 가능함
+ - x축은 T(시간), y축은 세기(5W)
+
+0 0
+1 0
+0 1
+1 1
+
+1. & and 연산자: 곱하기 개념
+2. | or 연산자: 하나만 1이어도 1
+이걸 활용해 계산기 제작 가능함
+
+ - 오늘은 디지털, 내일은 아날로그 신호에 대해서 배울 것
+
+p. 2 LED
+
+ - 다이오드: 양극(+)에서 음극(-)으로 순방향으로만 전류가 흐름
+ - +는 언덕이고, -는 평지임 => 물은 언덕에서 아래로만 흐를 수 밖에 없음
+
+ - LED: Light Emitting Diode, 발광 다이오드
+ - RGB 형태이기 때문에 모든 색상을 표현할 수 있다
+
+ - void pinMode(uint8_t pin, uint8_t mode)
+ - 매개변수
+ - pin: 설정하고자 하는 핀의 번호 ex) 13번 핀
+ - mode: INPUT, OUTPUT, INPUT_PULLUP 중 하나
+ - cf) MCU에서 전기 신호를 내보내서 LED에 불빛이 들어오게 하는 것이기 때문에, LED 점등시 pinMode는 OUTPUT임
+ - (코드는 대소문자를 구분함)
+ - 반환값: 없음
+
+ - void digitalWrite()
+ - pin: 핀 번호
+ - value: HIGH(1) 또는 LOW(0) // HIGH: 5V(아두이노의 기준 볼트), LOW(0): 0V
+ - 불빛을 키다(전기를 주는 것): HIGH
+
+ - void delay()
+ - ms: 밀리초 단위의 지연 시간(코드를 멈춤)
+ - 1000 ms = 1 s(1초)
+
+ - 브레드보드
+ - +축, -축은 가로로 한 줄임, 한 줄의 의미: 같은 한 줄에서는 어떠한 위치에 전선을 연결해도 됨( 한 줄 = 모두 연결됨)
+ - A부터 J축은 세로가 한 줄임, 세로 한 줄에서 어떤 위치에 꽃든 상관없음 cf) 브레드보드 중간에 구분선 기준으로 위 아래는 연결 상관 없음(서로 영향 X)
+
+ - 그라운드: -극 = 0V(전기가 안 통하는 상태)
+ - -극 = GND = OV
+
+ - LED는 다리가 긴 쪽이 +, 짧은 쪽이 -임
+ - LED의 긴 쪽이 +니까 긴 쪽을 아두이노 보드의 -에 연결해서 전기를 주고 받을 수 있도록 함
+ - cf) 트랜스미터(TX): 송신기(전기를 보냄), 리시버(RX): 수신기(전기를 받음)
+
+• 시리얼 모니터 입력으로 LED를 제어하는 프로그램 작성
+✓ 시리얼 통신으로 1을 보내면 첫번째 LED가 켜짐
+✓ 숫자 1~4를 보내서 LED 4개를 제어
+✓ 숫자 5를 보내면 4개 다 켜지게 함.
+ - 숫자 6을 보내면 4개 다 꺼지게 함.
+
+@@@ 2-1주차 수업 끝
+
+@@@ 2-2주차 수업 시작
+
+ - VCC: +극
+ - D21: -극
+ - 논리적으로는 0이지만, 실제 전압은 0.3임(살짝 떠있음) => 버튼을 안 눌러도 눌른 것처럼 표시될 확률이 가끔 있음
+
+ - int digitalRead()
+ - 5V가 들어오면 1을 반환, 0V가 들어오면 0을 반환
+
+ - 풀다운 저항: D14가 0.3V가 흐르고 있는데, 저항이 있는 GND 그라운드를 만나서 D14에서 0V가 흐르게 해줌
+ - 저항값을 낮춰서 소자의 온도가 비정상적으로 오르는 것을 방지해줌
+
+ - 풀업 저항: 0.3V가 흐르는 D14의 값을 1V로 올려줌
+ - 버튼의 값이 바뀌면 => 버튼이 눌렸다는 것을 인지함 cf) 1이어야지만 눌렸다고 판단하지 않음
+
+ - void pinMode(pin, mode) // mode: INPUT_PULLUP(풀업 저항을 사용할 수 있게 해주는 모드)
+
+ - 채터링: 버튼을 누르는 동안 인식이 되지 않는 에러
+ - 리바운싱: 채터링을 없애는 것
+
+ - void delay(ms)
+ - ms: 밀리초 단위의 지연 시간 // 코드를 멈추게 함
+
+ - void delayMicroseconds(us)
+ - us: 마이크로초 단위의 지연 시간
+ - 1 us = 1/1000 ms
+
+ - unsigned long millis(void)
+ - 반환값: 프로그램이 시작된 이후의 밀리초(millisecond) 단위 경과 시간
+ - 프로그램이 시작한지 1초가 지나면 => 1000 밀리초
+ - 1.5 sec => 1500 ms
+
+ - 5번 실습: 1개의 LED가 1초마다 깜빡임, 다른 1개의 LED는 버튼을 누르면 켜지고, 다시 누르면 꺼짐
+
+ - time_current = mills(); // 현재 시간
+ - 1초 지나면 => 1000 ms 반환
+
+ - Delay를 쓰지 않은 LED 1초마다 깜빡이기!
+
+@@@ 2-3주차 수업 끝
+
+@@@ 2-4주차(현강) 수업 시작
+
+8-1 ~ 8-5 실습 예제 진행
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(2,INPUT);
+  pinMode(3,OUTPUT);
+  pinMode(4,OUTPUT);
+}
+
+bool LED_state = false;
+bool LED_state2 = false;
+int count = 0;
+long time_current = 0;
+long time_previous = 0;
+bool button_state_current = false;
+bool button_state_previous = false;
+
+void loop() {
+  time_current = millis();
+  count++;
+
+  if(time_current - time_previous >= 1000){
+    time_previous = time_current;
+
+    LED_state =! LED_state;
+    digitalWrite(3, LED_state);
+
+    Serial.println(count);
+    count = 0;
+    }
+    
+    button_state_current = digitalRead(2);
+    if(button_state_current){
+      if(button_state_previous == false){
+        button_state_previous = true;
+        LED_state2 =! LED_state2;
+        digitalWrite(4, LED_state2);
+        }
+      delay(50);
+      }
+      else
+      button_state_previous = false;
+
+}
+
+@@@ 2-4주차(현강) 수업 끝
+
+용어 사전
+1. 
